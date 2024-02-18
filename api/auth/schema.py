@@ -9,18 +9,23 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     role: str = 'user'
+    password: str 
 
-class UserUpdate(BaseModel):
-    firstname: str | None = None
-    lastname: str | None = None
-    email: str | None = None
-
+class UserUpdate(UserBase):
+    firstname: str | None
+    lastname: str | None
+    email: str | None
+    
 
 class UserOutput(UserBase):
     id: int
     username: str
     role: str 
 
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
 
 class User(UserOutput):
     hashed_password: str

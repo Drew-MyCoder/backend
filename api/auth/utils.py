@@ -9,8 +9,8 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt, ExpiredSignatureError
 from passlib.context import CryptContext
 from dotenv import load_dotenv
-from api.db.database import get_db
-from auth import crud, schema, model
+from api.database import get_db
+from api.auth import crud, schema, model
 
 load_dotenv()
 
