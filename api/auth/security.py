@@ -40,7 +40,7 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def authenticate_user_with_pemail(email: str, password: str, db):
+def authenticate_user_with_email(email: str, password: str, db):
     user = crud.find_user_by_email(email=email, db=db)
 
     if not verify_password(password, user.hashed_password):

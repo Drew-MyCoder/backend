@@ -7,22 +7,33 @@ from api.auth.router import router as auth_router
 from api.testimonies.router import router as testimonies_router
 from api.prayers.router import router as prayers_router
 
+from fastapi.middleware.cors import CORSMiddleware
 
-Base.metadata.create_all(bind=engine) 
 
-app = FastAPI(title='SCB API', deescription='backend for prayer request and testimony', version='1.0.0')
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(
+    title="SCB API",
+    deescription="backend for prayer request and testimony",
+    version="1.0.0",
+)
+origins = ["http://localhost:5173"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(auth_router)
 app.include_router(testimonies_router)
 app.include_router(prayers_router)
 
+
 @app.get("/")
 async def read_root():
-    return ('Welcome to scb api')
+    return "Welcome to scb api"
 
 
-
-if __name__ == '__main__':
-    uvicorn.run('main:app', host='localhost', port=8000, 
-    reload=True) 
-
-
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="localhost", port=8000, reload=True)
