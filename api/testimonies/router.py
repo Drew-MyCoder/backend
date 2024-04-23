@@ -9,7 +9,7 @@ from custom_error import NotFoundError
 router = APIRouter(prefix="/testimonies", tags=["Testimony"])
 
 
-@router.post("/", response_model=schema.Testimony)
+@router.post("/new", response_model=schema.Testimony)
 async def create_testimony(
     testimony_detail: schema.TestimonyCreate, db=Depends(get_db)
 ) -> schema.Testimony:

@@ -8,7 +8,7 @@ from custom_error import NotFoundError
 router = APIRouter(prefix="/prayers", tags=["Prayers"])
 
 
-@router.post("/", response_model=schema.Prayer)
+@router.post("/new", response_model=schema.Prayer)
 async def create_prayer(
     prayer_detail: schema.PrayerCreate, db=Depends(get_db)
 ) -> schema.Prayer:
@@ -21,7 +21,7 @@ async def create_prayer(
     return _prayer
 
 
-@router.get("/", response_model=list[schema.Prayer])
+@router.get("/all", response_model=list[schema.Prayer])
 async def get_all_prayers(db=Depends(get_db)):
     return crud.read_prayers(db)
 

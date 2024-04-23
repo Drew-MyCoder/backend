@@ -8,7 +8,7 @@ from api.database import get_db
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-router = APIRouter(prefix = '/auth', tags= ['Auth'])
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/signup", response_model=schema.UserOutput)
@@ -20,9 +20,7 @@ async def register_user(
         firstname=user_info.firstname,
         lastname=user_info.lastname,
     )
-    existing_email = crud.read_user_by_email(
-        email=user_info.email, db=db
-    )
+    existing_email = crud.read_user_by_email(email=user_info.email, db=db)
     if existing_email:
         raise HTTPException(status_code=400, detail="Email already exists")
     db_user.hashed_password = security.pwd_context.hash(user_info.password)
@@ -32,13 +30,13 @@ async def register_user(
 
 
 @router.post("/login")
-async def login_via_email(
-    login_details: schema.UserLogin, db=Depends(get_db)
-):
+async def login_via_email(login_details: schema.UserLogin, db=Depends(get_db)):
     try:
         user = crud.find_user_by_email(email=login_details.email, db=db)
 
-        access_token_expires = timedelta(minutes=int(security.ACCESS_TOKEN_EXPIRE_MINUTES))
+        access_token_expires = timedelta(
+            minutes=int(security.ACCESS_TOKEN_EXPIRE_MINUTES)
+        )
         access_token = security.create_access_token(
             data={"sub": user.email, "role": user.role},
             expires_delta=access_token_expires,
@@ -65,7 +63,6 @@ async def login_via_email(
             key="access_token",
             value=access_token,
             httponly=True,
-
             # secure=True, # Only send over HTTPS
             # expires=timedelta(days=7), # Adjust expiration as needed
             # samesite="lax",  # Mitiagte CSRF
@@ -106,3 +103,8 @@ async def refresh_access_token_endpoint(
         # samesite="lax",  # Mitiagte CSRF
     )
     return response
+
+
+@router.get("/users")
+async def get_all_users(db=Depends(get_db)) -> list[schema.User]:
+    return crud.read_users(db)
